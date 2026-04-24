@@ -1,376 +1,199 @@
-# Task 4
-# class Shop:
-#     def __init__(self, name):
+# -------------------------------------------------------
+# Магический метод __call__. Функторы и классы-декораторы
+# -------------------------------------------------------
+
+# task 2
+# import string, random
+#
+# psw_chars = string.ascii_lowercase + string.digits + "!@#$%*"
+# min_length = 5
+# max_length = 20
+#
+# class RandomPassword:
+#     def __init__(self, chars, min_len, max_len):
+#         self.__chars = chars
+#         self.__min_len = min_len
+#         self.__max_len = max_len
+#
+#     def __call__(self, *args, **kwargs):
+#         n = random.randint(self.__min_len, self.__max_len)
+#         return "".join(random.choice(self.__chars) for i in range(n))
+#
+#
+# rnd = RandomPassword(psw_chars, min_length, max_length)
+# lst_pass = list(rnd() for i in range(3))
+# -------------------------------------------------------
+
+
+# task 3
+# class ImageFileAcceptor:
+#     def __init__(self, extensions):
+#         self.__extensions = extensions
+#
+#     def __call__(self, filename):
+#         return filename.split(".")[-1] in self.__extensions
+# -------------------------------------------------------
+
+
+# task 4
+from string import ascii_lowercase, digits
+
+# class LoginForm:
+#     def __init__(self, name, validators=None):
 #         self.name = name
-#         self.goods = []
+#         self.validators = validators
+#         self.login = ""
+#         self.password = ""
 #
-#     def add_product(self, product):
-#         self.goods.append(product)
+#     def post(self, request):
+#         self.login = request.get('login', "")
+#         self.password = request.get('password', "")
 #
-#     def remove_product(self, product):
-#         self.goods.remove(product)
+#     def is_validate(self):
+#         if not self.validators:
+#             return True
+#
+#         for v in self.validators:
+#             if not v(self.login) or not v(self.password):
+#                 return False
+#
+#         return True
 #
 #
-# class Product:
-#     __id = 0
+# class LengthValidator:
+#     def __init__(self, min_length, max_length):
+#         self.__min_length = min_length
+#         self.__max_length = max_length
 #
-#     def __init__(self, name, weight, price):
-#         Product.__id += 1
-#         self.id = Product.__id
-#         self.name = name
-#         self.weight = weight
-#         self.price = price
+#     def __call__(self, string):
+#         return self.__min_length <= len(string) <= self.__max_length
 #
-#     def __setattr__(self, key, value):
-#         if key == "name" and not isinstance(value, str):
-#             raise TypeError("Неверный тип присваиваемых данных.")
-#         elif key in ("weight", "price") and not isinstance(value, (int, float)):
-#             raise TypeError("Неверный тип присваиваемых данных.")
-#         elif key == "id" and not isinstance(value, int):
-#             raise TypeError("Неверный тип присваиваемых данных.")
-#         else:
-#             object.__setattr__(self, key, value)
 #
-#     def __delattr__(self, item):
-#         if item == "id":
-#             raise AttributeError("Атрибут id удалять запрещено.")
-import time
-from itertools import count
-from typing import Any
+# class CharsValidator:
+#     def __init__(self, chars):
+#         self.__chars = chars
+#
+#     def __call__(self, chars):
+#         return all(i in self.__chars for i in chars)
+# -------------------------------------------------------
 
 
-# Task 5
-# class Course:
-#     def __init__(self, name):
-#         self.name = name
-#         self.modules = []
-#
-#     def add_module(self, module):
-#         self.modules.append(module)
-#
-#     def remove_module(self, indx):
-#         del self.modules[indx]
-#
-#
-# class Module:
-#     def __init__(self, name):
-#         self.name = name
-#         self.lessons = []
-#
-#     def add_lesson(self, lesson):
-#         self.lessons.append(lesson)
-#
-#     def remove_lesson(self, indx):
-#         del self.lessons[indx]
-#
-#
-# class LessonItem:
-#     def __init__(self, title, practices, duration):
-#         self.title = title
-#         self.practices = practices
-#         self.duration = duration
-#
-#     def __setattr__(self, key, value):
-#         if key == "title" and not isinstance(value, str):
-#             raise TypeError("Неверный тип присваиваемых данных.")
-#         elif key in ("practices", "duration") and not isinstance(value, int):
-#             raise TypeError("Неверный тип присваиваемых данных.")
-#         else:
-#             object.__setattr__(self, key, value)
-#
-#     def __getattr__(self, item):
-#         return False
-#
-#     def __delattr__(self, item):
-#         if item in ("title", "practices", "duration"):
-#             raise AttributeError(f"Атрибут {item} удалять запрещено.")
+# task 5
+# class DigitRetrieve:
+#     def __call__(self, string, *args, **kwargs):
+#         try:
+#             return int(string)
+#         except ValueError:
+#             return None
+# -------------------------------------------------------
 
 
-# Task 6
-# class Picture:
-#     def __init__(self, name, author, descr):
-#         self.name = name
-#         self.author = author
-#         self.descr = descr
+# task 6
+# class RenderList:
+#     def __init__(self, type_list):
+#         self.__type_list = type_list
 #
-#     def get_info_exhibit(self):
-#         return f"Описание экспоната {self.name}: {self.descr}"
+#     def __call__(self, lst_in, *args, **kwargs):
+#         lst = "\n".join("<li>" + i + "</li>" for i in lst_in)
+#         tag = self.__type_list if self.__type_list in ("ol", "ul") else "ul"
+#         return f"<{tag}>\n{lst}\n</{tag}>"
 #
-#
-# class Mummies:
-#     def __init__(self, name, location, descr):
-#         self.name = name
-#         self.locatio = location
-#         self.descr = descr
-#
-#     def get_info_exhibit(self):
-#         return f"Описание экспоната {self.name}: {self.descr}"
-#
-# class Papyri:
-#     def __init__(self, name, date, descr):
-#         self.name = name
-#         self.date = date
-#         self.descr = descr
-#
-#     def get_info_exhibit(self):
-#         return f"Описание экспоната {self.name}: {self.descr}"
-#
-#
-# class Museum:
-#     def __init__(self, name):
-#         self.name = name
-#         self.exhibits = []
-#
-#     def add_exhibit(self, obj):
-#         self.exhibits.append(obj)
-#
-#     def remove_exhibit(self, obj):
-#         self.exhibits.remove(obj)
-#
-#     def get_info_exhibit(self, indx):
-#         return self.exhibits[indx].get_info_exhibit()
+# render = RenderList("ul")
+# lst1 = ["qqqq1", "qqqq2", "qqqq3"]
+# html = render(lst1)
+# print(html)
+# -------------------------------------------------------
 
 
-
-# Task 7
-# class SmartPhone:
-#     def __init__(self, model):
-#         self.model = model
-#         self.apps = []
+# task 7
+# class HandlerGET:
+#     def __init__(self, func):
+#         self.__fn = func
 #
-#     def add_app(self, app):
-#         if not any(type(a) == type(app) for a in self.apps):
-#             self.apps.append(app)
-#         else:
-#             print("This app is already in Phone")
+#     def __call__(self, request, *args, **kwargs):
+#         if request.get("method", "GET") == "GET":
+#             return self.get(self.__fn, request)
+#         return None
 #
-#     def remove_app(self, app):
-#         self.apps.remove(app)
+#     def get(self, func, request, *args, **kwargs):
+#         return f"GET: {func(request)}"
 #
 #
-# class AppVK:
-#     def __init__(self, name="ВКонтакте"):
-#         self.name = name
 #
-#
-# class AppYouTube:
-#     def __init__(self, memory_max=0, name="YouTube"):
-#         self.memory_max = memory_max
-#         self.name = name
-#
-#
-# class AppPhone:
-#     def __init__(self, phone_list=None, name="Phone"):
-#         self.phone_list = phone_list if phone_list is not None else {}
-#         self.name = name
+# @HandlerGet
+# def contact(request):
+#     return "Сергей Балакирев"
+# -------------------------------------------------------
 
 
-
-# Task 8
-# class Circle:
-#     def __init__(self, x, y, radius):
-#         self.__x = x
-#         self.__y = y
-#         self.__radius = radius
+# task 8
+# class Handler:
+#     def __init__(self, methods):
+#         self.__methods = methods
 #
-#     @property
-#     def x(self):
-#         return self.__x
+#     def __call__(self, func):
+#         def wrapper(request, *args, **kwargs):
+#             method = request.get("method", "GET")
 #
-#     @property
-#     def y(self):
-#         return self.__y
+#             if method not in self.__methods:
+#                 return None
 #
-#     @property
-#     def radius(self):
-#         return self.__radius
+#             method = method.lower()
+#             handler = self.__getattribute__(method)
+#             return handler(func, request)
 #
-#     @x.setter
-#     def x(self, value):
-#         if isinstance(value, (int, float)):
-#             self.__x = value
-#         elif not isinstance(value, (int, float)):
-#             raise TypeError("Неверный тип присваиваемых данных")
+#         return wrapper
 #
-#     @y.setter
-#     def y(self, value):
-#         if isinstance(value, (int, float)):
-#             self.__y = value
-#         else:
-#             raise TypeError("Неверный тип присваиваемых данных")
+#     def get(self, func, request, *args, **kwargs):
+#         return f"GET: {func(request)}"
 #
-#     @radius.setter
-#     def radius(self, value):
-#         if isinstance(value, (int, float)) and value > 0:
-#             self.__radius = value
-#         elif not isinstance(value, (int, float)):
-#             raise TypeError("Неверный тип присваиваемых данных")
+#     def post(self, func, request, *args, **kwargs):
+#         return f"POST: {func(request)}"
 #
 #
-#     def __getattr__(self, item):
-#         return False
+# @Handler(("GET", "POST"))
+# def contact(request):
+#     return "Сергей Балакирев"
+# -------------------------------------------------------
 
 
-
-# Task 9
-# class Dimensions:
-#     MIN_DIMENSION = 10
-#     MAX_DIMENSION = 1000
+# task 9
+# class InputDigits:
+#     def __init__(self, func):
+#         self.__func = func
 #
-#     @classmethod
-#     def __validation(cls, value):
-#         return isinstance(value, (int, float)) and cls.MIN_DIMENSION <= value <= cls.MAX_DIMENSION
-#
-#     def __init__(self, a, b, c):
-#         self.__a = self.__b = self.__c = None
-#         self.a = a
-#         self.b = b
-#         self.c = c
-#
-#     @property
-#     def a(self):
-#         return self.__a
-#
-#     @a.setter
-#     def a(self, value):
-#         if self.__validation(value):
-#             self.__a = value
-#
-#     @property
-#     def b(self):
-#         return self.__b
-#
-#     @b.setter
-#     def b(self, value):
-#         if self.__validation(value):
-#             self.__b = value
-#
-#     @property
-#     def c(self):
-#         return self.__c
-#
-#     @c.setter
-#     def c(self, value):
-#         if self.__validation(value):
-#             self.__c = value
-#
-#     def __setattr__(self, key, value):
-#         if key in ("MIN_DIMENSION", "MAX_DIMENSION"):
-#             raise AttributeError("Менять атрибуты MIN_DIMENSION и MAX_DIMENSION запрещено.")
-#         super().__setattr__(key, value)
-
-
-
-# Task 10
-import time
-
-class GeyserClassic:
-    MAX_DATE_FILTER = 100
-
-    def __init__(self):
-        self.__slots = {1: None, 2: None, 3: None}
-        self.__filters = {1: Mechanical, 2: Aragon, 3: Calcium}
-
-
-    def add_filter(self, slot_num, filter):
-        if slot_num in (1, 2, 3) and type(filter) == self.__filters[slot_num] and self.__slots[slot_num] is None:
-            self.__slots[slot_num] = filter
-
-    def remove_filter(self, slot_num):
-        self.__slots[slot_num] = None
-
-    def get_filters(self):
-        return tuple(self.__slots[i] for i in (1, 2, 3))
-
-    def water_on(self):
-        return all(self.__slots[i] is not None for i in (1, 2, 3)) and all((0 <= time.time() - self.__slots[i].date <= self.MAX_DATE_FILTER) for i in (1, 2, 3))
-
-
-class Filter:
-    def __init__(self, date):
-        self.__date = None
-        self.date = date
-
-    @classmethod
-    def validation(cls, value):
-        return isinstance(value, float) and value > 0
-
-    @property
-    def date(self):
-        return self.__date
-
-    @date.setter
-    def date(self, value):
-        if self.__date is None and self.validation(value):
-            self.__date = value
-
-
-class Mechanical(Filter):
-    pass
-
-class Aragon(Filter):
-    pass
-
-class Calcium(Filter):
-    pass
-
-
-
-
-# class Mechanical:
-#     def __init__(self, date):
-#         self.__date = None
-#         self.date = date
-#
-#     @classmethod
-#     def validation(cls, value):
-#         return isinstance(value, float) and value > 0
-#
-#     @property
-#     def date(self):
-#         return self.__date
-#
-#     @date.setter
-#     def date(self, value):
-#         if self.__date is None and self.validation(value):
-#             self.__date = value
+#     def __call__(self, *args, **kwargs):
+#         return list(int(x) for x in self.__func().split())
 #
 #
-# class Aragon:
-#     def __init__(self, date):
-#         self.__date = None
-#         self.date = date
+# @InputDigits
+# def input_dg():
+#     return input()
 #
-#     @classmethod
-#     def validation(cls, value):
-#         return isinstance(value, float) and value > 0
-#
-#     @property
-#     def date(self):
-#         return self.__date
-#
-#     @date.setter
-#     def date(self, value):
-#         if self.__date is None and self.validation(value):
-#             self.__date = value
-#
-#
-# class Calcium:
-#     def __init__(self, date):
-#         self.__date = None
-#         self.date = date
-#
-#     @classmethod
-#     def validation(cls, value):
-#         return isinstance(value, float) and value > 0
-#
-#     @property
-#     def date(self):
-#         return self.__date
-#
-#     @date.setter
-#     def date(self, value):
-#         if self.__date is None and self.validation(value):
-#             self.__date = value
+# res = input_dg()
+# print(res)
+# -------------------------------------------------------
 
 
+# task 10
+class RenderDigit:
+    def __call__(self, str_in, *args, **kwargs):
+        try:
+            return int(str_in)
+        except ValueError:
+            return None
+
+class InputValues:
+    def __init__(self, render):
+        self.__render = render
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            return list(self.__render(x) for x in func().split())
+
+        return wrapper
+
+
+@InputValues(RenderDigit())
+def input_dg():
+    return input()
