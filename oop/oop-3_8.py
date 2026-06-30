@@ -56,13 +56,25 @@
 # tasc 4
 class Array:
     def __init__(self, max_length, cell):
-        self.cell = cell
-        self.arr = []
+        self.max_length = max_length
+        self.arr = [cell(0) for _ in range(max_length)]
+    
+    def __getitem__(self, key):
+        if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.max_length:
+            raise IndexError("неверный индекс для доступа к элементам массива")
+        
+        return self.arr[key].value
+    
+    def __setitem__(self, key, val):
+        if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.max_length:
+            raise IndexError("неверный индекс для доступа к элементам массива")
+        
+        self.arr[key].value = val
 
 
 class Integer:
     def __init__(self, start_value):
-        self.__value = start_value
+        self.value = start_value
     
     @property
     def value(self):
