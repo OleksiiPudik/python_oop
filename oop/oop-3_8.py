@@ -132,91 +132,110 @@
         
 # ---------------------------------------------------------------------
 # task 6
-class StackObj:
-    def __init__(self, data):
-        self.__data = data
-        self.__next = None
+# class StackObj:
+#     def __init__(self, data):
+#         self.__data = data
+#         self.__next = None
     
-    @property
-    def next(self):
-        return self.__next
+#     @property
+#     def next(self):
+#         return self.__next
     
-    @next.setter
-    def next(self, next):
-        self.__next = next
+#     @next.setter
+#     def next(self, next):
+#         self.__next = next
     
-    @property
-    def data(self):
-        return self.__data
+#     @property
+#     def data(self):
+#         return self.__data
 
 
-class Stack:
-    def __init__(self):
-        self.top = None
-        self.stack_count = 0
+# class Stack:
+#     def __init__(self):
+#         self.top = None
+#         self.stack_count = 0
     
-    def push(self, obj):
-        if self.top is None:
-            self.top = obj
-            self.stack_count += 1
-        else:
-            cur_stack = self.top
+#     def push(self, obj):
+#         if self.top is None:
+#             self.top = obj
+#             self.stack_count += 1
+#         else:
+#             cur_stack = self.top
                        
-            while cur_stack.next is not None:
-                cur_stack = cur_stack.next
+#             while cur_stack.next is not None:
+#                 cur_stack = cur_stack.next
             
-            cur_stack.next = obj
-            self.stack_count += 1
+#             cur_stack.next = obj
+#             self.stack_count += 1
     
-    def pop(self):
-        if self.stack_count == 0:
-            return self.top
-        elif self.stack_count == 1:
-            pop_obj = self.top
-            self.top = None
-            self.stack_count = 0
-            return pop_obj
-        else:
-            prev_stack = self.top
-            cur_stack = self.top.next
+#     def pop(self):
+#         if self.stack_count == 0:
+#             return self.top
+#         elif self.stack_count == 1:
+#             pop_obj = self.top
+#             self.top = None
+#             self.stack_count = 0
+#             return pop_obj
+#         else:
+#             prev_stack = self.top
+#             cur_stack = self.top.next
 
-            while cur_stack.next is not None:
-                prev_stack, cur_stack = prev_stack.next, cur_stack.next
+#             while cur_stack.next is not None:
+#                 prev_stack, cur_stack = prev_stack.next, cur_stack.next
             
-            prev_stack.next = None
-            self.stack_count -= 1
+#             prev_stack.next = None
+#             self.stack_count -= 1
 
-            return cur_stack
+#             return cur_stack
+    
+#     def __getitem__(self, key):
+#         if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.stack_count:
+#             raise IndexError("неверный индекс")
+#         elif key == 0:
+#             return self.top
+#         else:
+#             get_obj = self.top
+#             for i in range(key):
+#                 get_obj = get_obj.next
+            
+#             return get_obj
+    
+#     def __setitem__(self, key, value):
+#         if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.stack_count:
+#             raise IndexError("неверный индекс")
+#         elif key == 0:
+#             value.next, self.top = self.top.next, value
+#             # next_obj = self.top.next
+#             # self.top = value
+#             # self.top.next = next_obj
+#         else:
+#             prev_obj = self.top
+#             cur_obj = self.top.next
+#             next_obj = cur_obj.next
+
+#             for i in range(1, key):
+#                 prev_obj, cur_obj, next_obj = prev_obj.next, cur_obj.next, next_obj.next
+            
+#             cur_obj = value
+#             prev_obj.next, cur_obj.next = cur_obj, next_obj
+
+# -------------------------------------------------------
+# task 7
+class RadiusVector:
+    def __init__(self, *args):
+        self.coords = list(args)
     
     def __getitem__(self, key):
-        if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.stack_count:
-            raise IndexError("неверный индекс")
-        elif key == 0:
-            return self.top
-        else:
-            get_obj = self.top
-            for i in range(key):
-                get_obj = get_obj.next
-            
-            return get_obj
+        return tuple(self.coords[key]) if isinstance(key, slice) else self.coords[key]
     
     def __setitem__(self, key, value):
-        if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= self.stack_count:
-            raise IndexError("неверный индекс")
-        elif key == 0:
-            value.next, self.top = self.top.next, value
-            # next_obj = self.top.next
-            # self.top = value
-            # self.top.next = next_obj
-        else:
-            prev_obj = self.top
-            cur_obj = self.top.next
-            next_obj = cur_obj.next
-
-            for i in range(1, key):
-                prev_obj, cur_obj, next_obj = prev_obj.next, cur_obj.next, next_obj.next
-            
-            cur_obj = value
-            prev_obj.next, cur_obj.next = cur_obj, next_obj
+        self.coords[key] = value
+        # if isinstance(key, slice):
+        #     self.coords[key.start:key.stop:key.step] = value
+        # else:
+        #     self.coords[key] = value
 
 
+a = RadiusVector(1, 2, 3, 4)
+a[2] = 1
+print(a.coords)
