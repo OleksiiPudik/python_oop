@@ -302,51 +302,106 @@
 
 # -------------------------------------------------------------
 # tasc 9
-class Thing:
-    def __init__(self, name, weight):
-        self.name = name
-        self.weight = weight
+# class Thing:
+#     def __init__(self, name, weight):
+#         self.name = name
+#         self.weight = weight
     
-class Bag:
-    def __init__(self, max_weight):
-        self.max_weight = max_weight
-        self.things = []
+# class Bag:
+#     def __init__(self, max_weight):
+#         self.max_weight = max_weight
+#         self.things = []
     
-    def add_thing(self, thing):
-        all_weight = sum(i.weight for i in self.things) + thing.weight
+#     def add_thing(self, thing):
+#         all_weight = sum(i.weight for i in self.things) + thing.weight
 
-        if all_weight > self.max_weight:
-            raise ValueError("превышен суммарный вес предметов")
+#         if all_weight > self.max_weight:
+#             raise ValueError("превышен суммарный вес предметов")
         
-        self.things.append(thing)
+#         self.things.append(thing)
     
-    def validate(self, key_val):
-        if isinstance(key_val, bool) or not isinstance(key_val, int) or key_val < 0 or key_val >= len(self.things):
-            raise IndexError("неверный индекс")
+#     def validate(self, key_val):
+#         if isinstance(key_val, bool) or not isinstance(key_val, int) or key_val < 0 or key_val >= len(self.things):
+#             raise IndexError("неверный индекс")
+    
+#     def __getitem__(self, key):
+#         self.validate(key)
+
+#         return self.things[key]
+    
+#     def __setitem__(self, key, value):
+#         self.validate(key)
+
+#         sum_temp = sum(i.weight for i in self.things) - self.things[key].weight + value.weight
+#         if sum_temp > self.max_weight:
+#             raise ValueError("превышен суммарный вес предметов")
+        
+#         self.things[key] = value
+    
+#     def __delitem__(self, key):
+#         self.validate(key)
+
+#         del self.things[key]
+
+
+# a = Bag(10)
+# a.add_thing(Thing("aaa", 3))
+# a.add_thing(Thing("bbb", 5))
+# a.add_thing(Thing("ccc", 1))
+# del a[2]
+# print(a.things)
+
+# ----------------------------------------------------------------
+# tasc 10
+class Cell:
+    def __init__(self, value):
+        self.value = value
+
+
+class SparseTable:
+    def __init__(self):
+        self.rows = 0
+        self.cols = 0
+        self.table = {}
+    
+    def recalculation(self):
+        if len(self.table) == 0:
+            self.rows = self.cols = 0
+        else:
+            self.rows = max(i[0] for i in self.table.keys()) + 1
+            self.cols = max(i[1] for i in self.table.keys()) + 1
+    
+    def add_data(self, row, col, data):
+        self.table[(row, col)] = Cell(data)
+
+        self.recalculation()
+    
+    def remove_data(self, row, col):
+        if (row, col) not in self.table:
+            raise IndexError("ячейка с указанными индексами не существует")
+        
+        del self.table[(row, col)]
+
+        self.recalculation()
     
     def __getitem__(self, key):
-        self.validate(key)
+        row, col = key
 
-        return self.things[key]
-    
-    def __setitem__(self, key, value):
-        self.validate(key)
-
-        sum_temp = sum(i.weight for i in self.things) - self.things[key].weight + value.weight
-        if sum_temp > self.max_weight:
-            raise ValueError("превышен суммарный вес предметов")
+        if (row, col) not in self.table:
+            raise ValueError("данные по указанным индексам отсутствуют")
         
-        self.things[key] = value
+        return self.table[(row, col)].value
     
-    def __delitem__(self, key):
-        self.validate(key)
+    def __setitem__(self, key, val):
+        row, col = key
 
-        del self.things[key]
+        self.table[(row, col)] = Cell(val)
+
+        self.recalculation()
 
 
-a = Bag(10)
-a.add_thing(Thing("aaa", 3))
-a.add_thing(Thing("bbb", 5))
-a.add_thing(Thing("ccc", 1))
-del a[2]
-print(a.things)
+
+a = {"a":1, "b":2}
+if "c" not in a:
+    print("good")
+        
