@@ -221,21 +221,81 @@
 
 # -------------------------------------------------------
 # task 7
-class RadiusVector:
-    def __init__(self, *args):
-        self.coords = list(args)
+# class RadiusVector:
+#     def __init__(self, *args):
+#         self.coords = list(args)
+    
+#     def __getitem__(self, key):
+#         return tuple(self.coords[key]) if isinstance(key, slice) else self.coords[key]
+    
+#     def __setitem__(self, key, value):
+#         self.coords[key] = value
+#         # if isinstance(key, slice):
+#         #     self.coords[key.start:key.stop:key.step] = value
+#         # else:
+#         #     self.coords[key] = value
+
+
+# a = RadiusVector(1, 2, 3, 4)
+# a[2] = 1
+# print(a.coords)
+
+# -----------------------------------------------------------
+# task 8
+class TicTacToe:
+    def __init__(self):
+        self.pole = tuple(tuple(Cell() for _ in range(3)) for _ in range(3))
+    
+    def clear(self):
+        for i in self.pole:
+            for j in i:
+                j.is_free = True
+                j.value = 0
     
     def __getitem__(self, key):
-        return tuple(self.coords[key]) if isinstance(key, slice) else self.coords[key]
+        r, c = key
+
+        if not isinstance(r, bool) and isinstance(r, int) and not isinstance(c, bool) and isinstance(c, int):
+            if r < 0 or r >= 3 or c < 0 or c >= 3:
+                raise IndexError("неверный индекс клетки")
+            
+            return self.pole[r][c].value
+        
+        elif isinstance(r, slice) and not isinstance(c, bool) and isinstance(c, int):
+            if c < 0 or c >= 3:
+                raise IndexError("неверный индекс клетки")
+            
+            return tuple(i[c].value for i in self.pole)
+        
+        elif not isinstance(r, bool) and isinstance(r, int) and isinstance(c, slice):
+            if r < 0 or r >= 3:
+                raise IndexError("неверный индекс клетки")
+            
+            return tuple(i.value for i in self.pole[r])
+
+        raise IndexError("неверный индекс клетки")
     
-    def __setitem__(self, key, value):
-        self.coords[key] = value
-        # if isinstance(key, slice):
-        #     self.coords[key.start:key.stop:key.step] = value
-        # else:
-        #     self.coords[key] = value
+    def __setitem__(self, key, val):
+        r, c = key
 
+        if isinstance(r, bool) or not isinstance(r, int) or r < 0 or r >= 3:
+            raise IndexError("неверный индекс клетки")
+        elif isinstance(c, bool) or not isinstance(c, int) or c < 0 or c >= 3:
+            raise IndexError("неверный индекс клетки")
+        elif not self.pole[r][c]:
+            raise ValueError("клетка уже занята")
+        
+        self.pole[r][c].value = val
+        self.pole[r][c].is_free = False
+    
 
-a = RadiusVector(1, 2, 3, 4)
-a[2] = 1
-print(a.coords)
+class Cell:
+    def __init__(self):
+        self.is_free = True
+        self.value = 0
+    
+    def __bool__(self):
+        return self.is_free
+
+a = TicTacToe()
+print(a.pole)
