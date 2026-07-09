@@ -242,60 +242,111 @@
 
 # -----------------------------------------------------------
 # task 8
-class TicTacToe:
-    def __init__(self):
-        self.pole = tuple(tuple(Cell() for _ in range(3)) for _ in range(3))
+# class TicTacToe:
+#     def __init__(self):
+#         self.pole = tuple(tuple(Cell() for _ in range(3)) for _ in range(3))
     
-    def clear(self):
-        for i in self.pole:
-            for j in i:
-                j.is_free = True
-                j.value = 0
+#     def clear(self):
+#         for i in self.pole:
+#             for j in i:
+#                 j.is_free = True
+#                 j.value = 0
+    
+#     def __getitem__(self, key):
+#         r, c = key
+
+#         if not isinstance(r, bool) and isinstance(r, int) and not isinstance(c, bool) and isinstance(c, int):
+#             if r < 0 or r >= 3 or c < 0 or c >= 3:
+#                 raise IndexError("неверный индекс клетки")
+            
+#             return self.pole[r][c].value
+        
+#         elif isinstance(r, slice) and not isinstance(c, bool) and isinstance(c, int):
+#             if c < 0 or c >= 3:
+#                 raise IndexError("неверный индекс клетки")
+            
+#             return tuple(i[c].value for i in self.pole)
+        
+#         elif not isinstance(r, bool) and isinstance(r, int) and isinstance(c, slice):
+#             if r < 0 or r >= 3:
+#                 raise IndexError("неверный индекс клетки")
+            
+#             return tuple(i.value for i in self.pole[r])
+
+#         raise IndexError("неверный индекс клетки")
+    
+#     def __setitem__(self, key, val):
+#         r, c = key
+
+#         if isinstance(r, bool) or not isinstance(r, int) or r < 0 or r >= 3:
+#             raise IndexError("неверный индекс клетки")
+#         elif isinstance(c, bool) or not isinstance(c, int) or c < 0 or c >= 3:
+#             raise IndexError("неверный индекс клетки")
+#         elif not self.pole[r][c]:
+#             raise ValueError("клетка уже занята")
+        
+#         self.pole[r][c].value = val
+#         self.pole[r][c].is_free = False
+    
+
+# class Cell:
+#     def __init__(self):
+#         self.is_free = True
+#         self.value = 0
+    
+#     def __bool__(self):
+#         return self.is_free
+
+# a = TicTacToe()
+# print(a.pole)
+
+# -------------------------------------------------------------
+# tasc 9
+class Thing:
+    def __init__(self, name, weight):
+        self.name = name
+        self.weight = weight
+    
+class Bag:
+    def __init__(self, max_weight):
+        self.max_weight = max_weight
+        self.things = []
+    
+    def add_thing(self, thing):
+        all_weight = sum(i.weight for i in self.things) + thing.weight
+
+        if all_weight > self.max_weight:
+            raise ValueError("превышен суммарный вес предметов")
+        
+        self.things.append(thing)
+    
+    def validate(self, key_val):
+        if isinstance(key_val, bool) or not isinstance(key_val, int) or key_val < 0 or key_val >= len(self.things):
+            raise IndexError("неверный индекс")
     
     def __getitem__(self, key):
-        r, c = key
+        self.validate(key)
 
-        if not isinstance(r, bool) and isinstance(r, int) and not isinstance(c, bool) and isinstance(c, int):
-            if r < 0 or r >= 3 or c < 0 or c >= 3:
-                raise IndexError("неверный индекс клетки")
-            
-            return self.pole[r][c].value
-        
-        elif isinstance(r, slice) and not isinstance(c, bool) and isinstance(c, int):
-            if c < 0 or c >= 3:
-                raise IndexError("неверный индекс клетки")
-            
-            return tuple(i[c].value for i in self.pole)
-        
-        elif not isinstance(r, bool) and isinstance(r, int) and isinstance(c, slice):
-            if r < 0 or r >= 3:
-                raise IndexError("неверный индекс клетки")
-            
-            return tuple(i.value for i in self.pole[r])
-
-        raise IndexError("неверный индекс клетки")
+        return self.things[key]
     
-    def __setitem__(self, key, val):
-        r, c = key
+    def __setitem__(self, key, value):
+        self.validate(key)
 
-        if isinstance(r, bool) or not isinstance(r, int) or r < 0 or r >= 3:
-            raise IndexError("неверный индекс клетки")
-        elif isinstance(c, bool) or not isinstance(c, int) or c < 0 or c >= 3:
-            raise IndexError("неверный индекс клетки")
-        elif not self.pole[r][c]:
-            raise ValueError("клетка уже занята")
+        sum_temp = sum(i.weight for i in self.things) - self.things[key].weight + value.weight
+        if sum_temp > self.max_weight:
+            raise ValueError("превышен суммарный вес предметов")
         
-        self.pole[r][c].value = val
-        self.pole[r][c].is_free = False
+        self.things[key] = value
     
+    def __delitem__(self, key):
+        self.validate(key)
 
-class Cell:
-    def __init__(self):
-        self.is_free = True
-        self.value = 0
-    
-    def __bool__(self):
-        return self.is_free
+        del self.things[key]
 
-a = TicTacToe()
-print(a.pole)
+
+a = Bag(10)
+a.add_thing(Thing("aaa", 3))
+a.add_thing(Thing("bbb", 5))
+a.add_thing(Thing("ccc", 1))
+del a[2]
+print(a.things)
