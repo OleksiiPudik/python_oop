@@ -21,57 +21,86 @@
 
 # --------------------------------------
 # tasc 5
-class Person:
-    def __init__(self, fio, job, old, salary, year_job):
-        self.fio = fio
-        self.job = job
-        self.old = old
-        self.salary = salary
-        self.year_job = year_job
+# class Person:
+#     def __init__(self, fio, job, old, salary, year_job):
+#         self.fio = fio
+#         self.job = job
+#         self.old = old
+#         self.salary = salary
+#         self.year_job = year_job
     
-    def _values(self):
-        return [v for k, v in self.__dict__.items() if k != "i"]
+#     def _values(self):
+#         return [v for k, v in self.__dict__.items() if k != "i"]
     
-    def _check_index(self, key):
-        length = len(self._values())
+#     def _check_index(self, key):
+#         length = len(self._values())
 
-        if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= length:
-            raise IndexError("неверный индекс")
+#         if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= length:
+#             raise IndexError("неверный индекс")
     
-    def __getitem__(self, key):
-        lst_temp = self._values()
+#     def __getitem__(self, key):
+#         lst_temp = self._values()
 
-        self._check_index(key)
+#         self._check_index(key)
         
-        return lst_temp[key]
+#         return lst_temp[key]
     
-    def __setitem__(self, key, value):
-        lst_temp = [k for k, v in self.__dict__.items() if k != "i"]
+#     def __setitem__(self, key, value):
+#         lst_temp = [k for k, v in self.__dict__.items() if k != "i"]
 
-        self._check_index(key)
+#         self._check_index(key)
         
-        self.__dict__[lst_temp[key]] = value
+#         self.__dict__[lst_temp[key]] = value
+    
+#     def __iter__(self):
+#         self.i = 0
+#         return self
+    
+#     def __next__(self):
+#         lst_temp = self._values()
+
+#         if self.i < len(lst_temp):
+#             value = lst_temp[self.i]
+#             self.i += 1
+#             return value
+#         else:
+#             raise StopIteration
+
+
+        
+    
+
+# pers = Person('Гейтс Б.', 'бизнесмен', 61, 1000000, 46)
+# pers[0] = 'Балакирев С.М.'
+# for v in pers:
+#     print(v)
+# pers[5] = 123
+# ---------------------------------------------------
+# tasc 6
+class TriangleListIterator:
+    def __init__(self, lst):
+        self.lst = lst
     
     def __iter__(self):
-        self.i = 0
+        self.row = 0
+        self.col = 0
         return self
     
     def __next__(self):
-        lst_temp = self._values()
-
-        if self.i < len(lst_temp):
-            value = lst_temp[self.i]
-            self.i += 1
-            return value
-        else:
+        if self.row >= len(self.lst):
             raise StopIteration
-
-
         
-    
+        value = self.lst[self.row][self.col]
 
-pers = Person('Гейтс Б.', 'бизнесмен', 61, 1000000, 46)
-pers[0] = 'Балакирев С.М.'
-for v in pers:
-    print(v)
-pers[5] = 123
+        if self.col < self.row:
+            self.col += 1
+        else:
+            self.row += 1
+            self.col = 0
+        
+        return value
+
+lst = [[1], [2, 3], [4]]   # строке 2 нужно 3 элемента, а там 1
+it = TriangleListIterator(lst)
+for x in it:
+    print(x, end=' ')
