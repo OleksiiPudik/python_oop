@@ -29,14 +29,17 @@ class Person:
         self.salary = salary
         self.year_job = year_job
     
+    def _values(self):
+        return [v for k, v in self.__dict__.items() if k != "i"]
+    
     def _check_index(self, key):
-        length = len([v for k, v in self.__dict__.items() if k != "i"])
+        length = len(self._values())
 
         if isinstance(key, bool) or not isinstance(key, int) or key < 0 or key >= length:
             raise IndexError("неверный индекс")
     
     def __getitem__(self, key):
-        lst_temp = [v for k, v in self.__dict__.items() if k != "i"]
+        lst_temp = self._values()
 
         self._check_index(key)
         
@@ -54,7 +57,7 @@ class Person:
         return self
     
     def __next__(self):
-        lst_temp = [v for k, v in self.__dict__.items() if k != "i"]
+        lst_temp = self._values()
 
         if self.i < len(lst_temp):
             value = lst_temp[self.i]
