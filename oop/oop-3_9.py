@@ -108,33 +108,84 @@
 # -------------------------------------------------
 
 # tasc 7
-class IterColumn:
-    def __init__(self, lst, column):
-        self.lst = lst
-        self.column = column
+# class IterColumn:
+#     def __init__(self, lst, column):
+#         self.lst = lst
+#         self.column = column
     
-    def __iter__(self):
-        self.row = 0
-        self.col = self.column
-        return self
+#     def __iter__(self):
+#         self.row = 0
+#         self.col = self.column
+#         return self
     
-    def __next__(self):
-        if self.row >= len(self.lst):
-            raise StopIteration
+#     def __next__(self):
+#         if self.row >= len(self.lst):
+#             raise StopIteration
         
-        value = self.lst[self.row][self.col]
+#         value = self.lst[self.row][self.col]
 
-        self.row += 1
+#         self.row += 1
 
-        return value
+#         return value
 
-lst_in = [[1, 2, 3], [5, 6, 7], [8, 9, 10]]
-it = IterColumn(lst_in, 2)
-# for i in it:
-#     print(i)
+# lst_in = [[1, 2, 3], [5, 6, 7], [8, 9, 10]]
+# it = IterColumn(lst_in, 2)
+# # for i in it:
+# #     print(i)
 
-it_iter = iter(it)
-print(next(it_iter))
-print(next(it_iter))
-print(next(it_iter))
-print(next(it_iter))
+# it_iter = iter(it)
+# print(next(it_iter))
+# print(next(it_iter))
+# print(next(it_iter))
+# print(next(it_iter))
+
+# ------------------------------------------------
+
+# tasc 8
+class StackObj:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class Stack:
+    def __init__(self):
+        self.top = None
+            
+    def push_back(self, obj):
+        if self.top is None:
+            self.top = obj
+        else:
+            cur_obj = self.top
+            while cur_obj.next is not None:
+                cur_obj = cur_obj.next
+            
+            cur_obj.next = obj
+                
+    def push_front(self, obj):
+        if self.top is None:
+            self.top = obj
+        else:
+            obj.next, self.top = self.top, obj
+            
+    def __len__(self):
+        length = 0
+        cur_obj = self.top
+
+        while cur_obj is not None:
+            length += 1
+            cur_obj = cur_obj.next
+        
+        return length
+    
+    def _check_index(self, indx):
+        if isinstance(indx, bool) or not isinstance(indx, int) or indx < 0 or indx >= len(self):
+            raise IndexError("неверный индекс")
+    
+    def __getitem__(self, key):
+        self._check_index(key)
+        cur_obj = self.top
+
+        for i in range(key):
+            cur_obj = cur_obj.next
+        
+        return cur_obj.data
