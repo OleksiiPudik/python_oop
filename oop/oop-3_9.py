@@ -77,13 +77,45 @@
 # pers[5] = 123
 # ---------------------------------------------------
 # tasc 6
-class TriangleListIterator:
-    def __init__(self, lst):
+# class TriangleListIterator:
+#     def __init__(self, lst):
+#         self.lst = lst
+    
+#     def __iter__(self):
+#         self.row = 0
+#         self.col = 0
+#         return self
+    
+#     def __next__(self):
+#         if self.row >= len(self.lst):
+#             raise StopIteration
+        
+#         value = self.lst[self.row][self.col]
+
+#         if self.col < self.row:
+#             self.col += 1
+#         else:
+#             self.row += 1
+#             self.col = 0
+        
+#         return value
+
+# lst = [[1], [2, 3], [4]]   # строке 2 нужно 3 элемента, а там 1
+# it = TriangleListIterator(lst)
+# for x in it:
+#     print(x, end=' ')
+
+# -------------------------------------------------
+
+# tasc 7
+class IterColumn:
+    def __init__(self, lst, column):
         self.lst = lst
+        self.column = column
     
     def __iter__(self):
         self.row = 0
-        self.col = 0
+        self.col = self.column
         return self
     
     def __next__(self):
@@ -92,15 +124,17 @@ class TriangleListIterator:
         
         value = self.lst[self.row][self.col]
 
-        if self.col < self.row:
-            self.col += 1
-        else:
-            self.row += 1
-            self.col = 0
-        
+        self.row += 1
+
         return value
 
-lst = [[1], [2, 3], [4]]   # строке 2 нужно 3 элемента, а там 1
-it = TriangleListIterator(lst)
-for x in it:
-    print(x, end=' ')
+lst_in = [[1, 2, 3], [5, 6, 7], [8, 9, 10]]
+it = IterColumn(lst_in, 2)
+# for i in it:
+#     print(i)
+
+it_iter = iter(it)
+print(next(it_iter))
+print(next(it_iter))
+print(next(it_iter))
+print(next(it_iter))
