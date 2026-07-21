@@ -189,3 +189,35 @@ class Stack:
             cur_obj = cur_obj.next
         
         return cur_obj.data
+    
+    def __setitem__(self, key, value):
+        self._check_index(key)
+        cur_obj = self.top
+        
+        for i in range(key):
+            cur_obj = cur_obj.next
+        
+        cur_obj.data = value
+    
+    def __iter__(self):
+        self.cur = self.top
+        return self
+    
+    def __next__(self):
+        if self.cur is None:
+            raise StopIteration
+        
+        value = self.cur
+        self.cur = self.cur.next
+        return value
+        
+
+st = Stack()
+st.push_back(StackObj("data1"))
+st.push_back(StackObj("data2"))
+st.push_front(StackObj("data3"))
+
+# for obj in st:
+#     print(obj.data)
+# st[3] = "new_data"
+print(st[5])
