@@ -142,82 +142,152 @@
 # ------------------------------------------------
 
 # tasc 8
-class StackObj:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+# class StackObj:
+#     def __init__(self, data):
+#         self.data = data
+#         self.next = None
 
-class Stack:
-    def __init__(self):
-        self.top = None
+# class Stack:
+#     def __init__(self):
+#         self.top = None
             
-    def push_back(self, obj):
-        if self.top is None:
-            self.top = obj
-        else:
-            cur_obj = self.top
-            while cur_obj.next is not None:
-                cur_obj = cur_obj.next
+#     def push_back(self, obj):
+#         if self.top is None:
+#             self.top = obj
+#         else:
+#             cur_obj = self.top
+#             while cur_obj.next is not None:
+#                 cur_obj = cur_obj.next
             
-            cur_obj.next = obj
+#             cur_obj.next = obj
                 
-    def push_front(self, obj):
-        if self.top is None:
-            self.top = obj
-        else:
-            obj.next, self.top = self.top, obj
+#     def push_front(self, obj):
+#         if self.top is None:
+#             self.top = obj
+#         else:
+#             obj.next, self.top = self.top, obj
             
-    def __len__(self):
-        length = 0
-        cur_obj = self.top
+#     def __len__(self):
+#         length = 0
+#         cur_obj = self.top
 
-        while cur_obj is not None:
-            length += 1
-            cur_obj = cur_obj.next
+#         while cur_obj is not None:
+#             length += 1
+#             cur_obj = cur_obj.next
         
-        return length
+#         return length
     
-    def _check_index(self, indx):
-        if isinstance(indx, bool) or not isinstance(indx, int) or indx < 0 or indx >= len(self):
-            raise IndexError("неверный индекс")
+#     def _check_index(self, indx):
+#         if isinstance(indx, bool) or not isinstance(indx, int) or indx < 0 or indx >= len(self):
+#             raise IndexError("неверный индекс")
     
-    def __getitem__(self, key):
-        self._check_index(key)
-        cur_obj = self.top
+#     def __getitem__(self, key):
+#         self._check_index(key)
+#         cur_obj = self.top
 
-        for i in range(key):
-            cur_obj = cur_obj.next
+#         for i in range(key):
+#             cur_obj = cur_obj.next
         
-        return cur_obj.data
+#         return cur_obj.data
     
-    def __setitem__(self, key, value):
-        self._check_index(key)
-        cur_obj = self.top
+#     def __setitem__(self, key, value):
+#         self._check_index(key)
+#         cur_obj = self.top
         
-        for i in range(key):
-            cur_obj = cur_obj.next
+#         for i in range(key):
+#             cur_obj = cur_obj.next
         
-        cur_obj.data = value
+#         cur_obj.data = value
     
-    def __iter__(self):
-        self.cur = self.top
-        return self
+#     def __iter__(self):
+#         self.cur = self.top
+#         return self
     
-    def __next__(self):
-        if self.cur is None:
-            raise StopIteration
+#     def __next__(self):
+#         if self.cur is None:
+#             raise StopIteration
         
-        value = self.cur
-        self.cur = self.cur.next
-        return value
+#         value = self.cur
+#         self.cur = self.cur.next
+#         return value
         
 
-st = Stack()
-st.push_back(StackObj("data1"))
-st.push_back(StackObj("data2"))
-st.push_front(StackObj("data3"))
+# st = Stack()
+# st.push_back(StackObj("data1"))
+# st.push_back(StackObj("data2"))
+# st.push_front(StackObj("data3"))
 
 # for obj in st:
 #     print(obj.data)
 # st[3] = "new_data"
-print(st[5])
+# print(st[5])
+
+# ----------------------------------------
+
+# tasc 9
+class Cell:
+    def __init__(self, data):
+        self.__data = data
+    
+    @property
+    def data(self):
+        return self.__data
+    
+    @data.setter
+    def data(self, data):
+        self.__data = data
+
+class TableValues:
+    def __init__(self, rows, cols, type_data=int):
+        self.rows = rows
+        self.cols = cols
+        self.type_data = type_data
+        self.table = [[Cell(0) for _ in range(self.cols)] for _ in range(self.rows)]
+    
+    def _check_data(self, d):
+        if type(d) != self.type_data:
+            raise TypeError("неверный тип присваиваемых данных")
+    
+    def _check_index(self, r, c):
+        if isinstance(r, bool) or isinstance(c, bool) or not isinstance(r, int) or not isinstance(c, int) or r < 0 or c < 0 or r >= self.rows or c >= self.cols:
+            raise IndexError("неверный индекс")
+    
+    def __getitem__(self, key):
+        row, col = key
+        self._check_index(row, col)
+
+        return self.table[row][col].data
+    
+    def __setitem__(self, key, value):
+        row, col = key
+        self._check_data(value)
+        self._check_index(row, col)
+
+        self.table[row][col].data = value
+    
+    def __iter__(self):
+        self.cur_row = 0
+        return self
+    
+    def __next__(self):
+        if self.cur_row >= self.rows:
+            raise StopIteration
+        
+        value = [c.data for c in self.table[self.cur_row]]
+        self.cur_row += 1
+
+        return value
+
+table = TableValues(3, 3)
+
+for row in table:
+    for value in row:
+        print(value, end=" ")
+    
+    print()
+
+for row in table:
+        for value in row:
+            print(value, end=" ")
+    
+        print()
