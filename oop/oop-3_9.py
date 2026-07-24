@@ -225,6 +225,61 @@
 # ----------------------------------------
 
 # tasc 9
+# class Cell:
+#     def __init__(self, data):
+#         self.__data = data
+    
+#     @property
+#     def data(self):
+#         return self.__data
+    
+#     @data.setter
+#     def data(self, data):
+#         self.__data = data
+
+# class TableValues:
+#     def __init__(self, rows, cols, type_data=int):
+#         self.rows = rows
+#         self.cols = cols
+#         self.type_data = type_data
+#         self.table = [[Cell(0) for _ in range(self.cols)] for _ in range(self.rows)]
+    
+#     def _check_data(self, d):
+#         if type(d) != self.type_data:
+#             raise TypeError("неверный тип присваиваемых данных")
+    
+#     def _check_index(self, r, c):
+#         if isinstance(r, bool) or isinstance(c, bool) or not isinstance(r, int) or not isinstance(c, int) or r < 0 or c < 0 or r >= self.rows or c >= self.cols:
+#             raise IndexError("неверный индекс")
+    
+#     def __getitem__(self, key):
+#         row, col = key
+#         self._check_index(row, col)
+
+#         return self.table[row][col].data
+    
+#     def __setitem__(self, key, value):
+#         row, col = key
+#         self._check_data(value)
+#         self._check_index(row, col)
+
+#         self.table[row][col].data = value
+    
+#     def __iter__(self):
+#         self.cur_row = 0
+#         return self
+    
+#     def __next__(self):
+#         if self.cur_row >= self.rows:
+#             raise StopIteration
+        
+#         value = [c.data for c in self.table[self.cur_row]]
+#         self.cur_row += 1
+
+#         return value
+
+# table = TableValues(3, 3)
+
 class Cell:
     def __init__(self, data):
         self.__data = data
@@ -236,6 +291,7 @@ class Cell:
     @data.setter
     def data(self, data):
         self.__data = data
+
 
 class TableValues:
     def __init__(self, rows, cols, type_data=int):
@@ -260,17 +316,25 @@ class TableValues:
     
     def __setitem__(self, key, value):
         row, col = key
-        self._check_data(value)
         self._check_index(row, col)
+        self._check_data(value)
 
         self.table[row][col].data = value
     
     def __iter__(self):
-        self.cur_row = 0
-        return self
+        return TableIterator(self.table)
     
+    
+class TableIterator:
+    def __init__(self, table):
+        self.table = table
+        self.cur_row = 0
+
+    def __iter__(self):
+        return self
+
     def __next__(self):
-        if self.cur_row >= self.rows:
+        if self.cur_row >= len(self.table):
             raise StopIteration
         
         value = [c.data for c in self.table[self.cur_row]]
@@ -278,16 +342,9 @@ class TableValues:
 
         return value
 
+
 table = TableValues(3, 3)
-
-for row in table:
-    for value in row:
-        print(value, end=" ")
-    
-    print()
-
-for row in table:
-        for value in row:
-            print(value, end=" ")
-    
-        print()
+table[0, 0] = 1
+table[1, 1] = 2
+for i in table:
+    print(i, end=" ")
