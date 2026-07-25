@@ -280,71 +280,165 @@
 
 # table = TableValues(3, 3)
 
-class Cell:
-    def __init__(self, data):
-        self.__data = data
+# class Cell:
+#     def __init__(self, data):
+#         self.__data = data
     
-    @property
-    def data(self):
-        return self.__data
+#     @property
+#     def data(self):
+#         return self.__data
     
-    @data.setter
-    def data(self, data):
-        self.__data = data
+#     @data.setter
+#     def data(self, data):
+#         self.__data = data
 
 
-class TableValues:
-    def __init__(self, rows, cols, type_data=int):
-        self.rows = rows
-        self.cols = cols
-        self.type_data = type_data
-        self.table = [[Cell(0) for _ in range(self.cols)] for _ in range(self.rows)]
+# class TableValues:
+#     def __init__(self, rows, cols, type_data=int):
+#         self.rows = rows
+#         self.cols = cols
+#         self.type_data = type_data
+#         self.table = [[Cell(0) for _ in range(self.cols)] for _ in range(self.rows)]
     
-    def _check_data(self, d):
-        if type(d) != self.type_data:
-            raise TypeError("неверный тип присваиваемых данных")
+#     def _check_data(self, d):
+#         if type(d) != self.type_data:
+#             raise TypeError("неверный тип присваиваемых данных")
     
-    def _check_index(self, r, c):
-        if isinstance(r, bool) or isinstance(c, bool) or not isinstance(r, int) or not isinstance(c, int) or r < 0 or c < 0 or r >= self.rows or c >= self.cols:
-            raise IndexError("неверный индекс")
+#     def _check_index(self, r, c):
+#         if isinstance(r, bool) or isinstance(c, bool) or not isinstance(r, int) or not isinstance(c, int) or r < 0 or c < 0 or r >= self.rows or c >= self.cols:
+#             raise IndexError("неверный индекс")
     
+#     def __getitem__(self, key):
+#         row, col = key
+#         self._check_index(row, col)
+
+#         return self.table[row][col].data
+    
+#     def __setitem__(self, key, value):
+#         row, col = key
+#         self._check_index(row, col)
+#         self._check_data(value)
+
+#         self.table[row][col].data = value
+    
+#     def __iter__(self):
+#         return TableIterator(self.table)
+    
+    
+# class TableIterator:
+#     def __init__(self, table):
+#         self.table = table
+#         self.cur_row = 0
+
+#     def __iter__(self):
+#         return self
+
+#     def __next__(self):
+#         if self.cur_row >= len(self.table):
+#             raise StopIteration
+        
+#         value = [c.data for c in self.table[self.cur_row]]
+#         self.cur_row += 1
+
+#         return value
+
+
+# table = TableValues(3, 3)
+# table[0, 0] = 1
+# table[1, 1] = 2
+# for i in table:
+#     print(i, end=" ")
+
+# ----------------------------------------------------
+
+# tasc 10
+class Matrix:
+    def _check_nums(self, *args):
+        r, c, f_v = args
+        if isinstance(r, bool) or not isinstance(r, int) or r <= 0:
+            raise TypeError("аргументы rows, cols - целые числа; fill_value - произвольное число")
+
+        if isinstance(c, bool) or not isinstance(c, int) or c <= 0:
+            raise TypeError("аргументы rows, cols - целые числа; fill_value - произвольное число")
+
+        if isinstance(f_v, bool) or not isinstance(f_v, (int, float)):
+            raise TypeError("аргументы rows, cols - целые числа; fill_value - произвольное число")
+
+    def _check_list(self, lst_check):
+        for i in lst_check:
+            if len(i) != len(lst_check[0]):
+                raise TypeError("список должен быть прямоугольным, состоящим из чисел")
+
+            for j in i:
+                if isinstance(j, bool) or not isinstance(j, (int, float)):
+                    raise TypeError("список должен быть прямоугольным, состоящим из чисел")
+
+    def __init__(self, *args):
+        if len(args) == 3:
+            self.rows, self.cols, self.fill_value = args
+            self._check_nums(self.rows, self.cols, self.fill_value)
+            self.matrix = [[self.fill_value for _ in range(self.cols)] for _ in range(self.rows)]
+        elif len(args) == 1:
+            self._check_list(args[0])
+            self.matrix = [list(row) for row in args[0]]
+            self.rows = len(self.matrix)
+            self.cols = len(self.matrix[0])
+
+    def _check_index(self, row_indx, col_indx):
+        if isinstance(row_indx, bool) or isinstance(col_indx, bool) or not isinstance(row_indx, int) or not isinstance(col_indx, int) or row_indx < 0 or col_indx < 0 or row_indx >= self.rows or col_indx >= self.cols:
+            raise IndexError("недопустимые значения индексов")
+
     def __getitem__(self, key):
         row, col = key
         self._check_index(row, col)
+        return self.matrix[row][col]
 
-        return self.table[row][col].data
-    
+    def _check_value(self, row_val, col_val, val_val):
+        self._check_index(row_val, col_val)
+
+        if isinstance(val_val, bool) or not isinstance(val_val, (int, float)):
+            raise TypeError("значения матрицы должны быть числами")
+
     def __setitem__(self, key, value):
         row, col = key
-        self._check_index(row, col)
-        self._check_data(value)
+        self._check_value(row, col, value)
 
-        self.table[row][col].data = value
+        self.matrix[row][col] = value
+
+    def _check_len_matrix(self, other_matrix):
+        if self.rows != other_matrix.rows or self.cols != other_matrix.cols:
+            raise ValueError("операции возможны только с матрицами равных размеров")
+
+    def __add__(self, other):
+        if isinstance(other, (int, float)):
+            lst = [list(j + other for j in i) for i in self.matrix]
+            return Matrix(lst)
+        else:
+            self._check_len_matrix(other)
+            lst = [list(self.matrix[i][j] + other.matrix[i][j] for j in range(self.cols)) for i in range(self.rows)]
+            return Matrix(lst)
+
+    def __sub__(self, other):
+        if isinstance(other, (int, float)):
+            lst = [list(j - other for j in i) for i in self.matrix]
+            return Matrix(lst)
+        else:
+            self._check_len_matrix(other)
+            lst = [list(self.matrix[i][j] - other.matrix[i][j] for j in range(self.cols)) for i in range(self.rows)]
+            return Matrix(lst)
+
     
-    def __iter__(self):
-        return TableIterator(self.table)
     
-    
-class TableIterator:
-    def __init__(self, table):
-        self.table = table
-        self.cur_row = 0
+            
 
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.cur_row >= len(self.table):
-            raise StopIteration
-        
-        value = [c.data for c in self.table[self.cur_row]]
-        self.cur_row += 1
-
-        return value
+m1 = Matrix(2, 2, 3)
+m2 = Matrix([[1, 1], [1, 1]])
+print(m1.matrix)
+print(m2.matrix)
+print(m1[0, 0])
+m2[0, 0] = True
 
 
-table = TableValues(3, 3)
-table[0, 0] = 1
-table[1, 1] = 2
-for i in table:
-    print(i, end=" ")
+
+
+
