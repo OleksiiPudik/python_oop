@@ -29,12 +29,18 @@ class TicTacToe:
         self.__check_index(row, col)
         self.pole[row][col].value = value
 
-    def _check_list(self):
+    def _rows_cols_diags(self):
         return [[self.pole[i][k].value for k in range(3)] for i in range(3)] + [[self.pole[k][j].value for k in range(3)] for j in range(3)] + [[self.pole[k][k].value for k in range(3)]] + [[self.pole[k][2-k].value for k in range(3)]]
 
-game = TicTacToe()
-game[0, 2] = 1
-game[1, 1] = 1
-game[2, 0] = 1
-res = game._check_list()
-print(res)
+    @property
+    def is_human_win(self):
+        return any(all(j == self.HUMAN_X for j in line) for line in self._rows_cols_diags())
+
+
+# game = TicTacToe()
+# game[0, 2] = 1
+# game[1, 1] = 1
+# game[2, 0] = 1
+# res = game._rows_cols_diags()
+# print(res)
+
