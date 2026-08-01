@@ -1,3 +1,5 @@
+import random
+
 class Cell:
     def __init__(self):
         self.value = 0
@@ -36,11 +38,50 @@ class TicTacToe:
     def is_human_win(self):
         return any(all(j == self.HUMAN_X for j in line) for line in self._rows_cols_diags())
 
+    @property
+    def is_computer_win(self):
+        return any(all(j == self.COMPUTER_O for j in line) for line in self._rows_cols_diags())
 
-# game = TicTacToe()
-# game[0, 2] = 1
-# game[1, 1] = 1
-# game[2, 0] = 1
-# res = game._rows_cols_diags()
-# print(res)
+    @property
+    def is_draw(self):
+        return all(all(not cell for cell in line) for line in self.pole) and not self.is_human_win and not self.is_computer_win
 
+    def __bool__(self):
+        return not self.is_human_win and not self.is_computer_win and not self.is_draw
+
+    def init(self):
+        for line in self.pole:
+            for cell in line:
+                cell.value = self.FREE_CELL
+
+    def show(self):
+        for line in self.pole:
+            for cell in line:
+                if cell.value == self.FREE_CELL:
+                    print("#", end=" ")
+                elif cell.value == self.HUMAN_X:
+                    print("X", end=" ")
+                elif cell.value == self.COMPUTER_O:
+                    print("0", end=" ")
+
+            print()
+
+        print("----------")
+
+    def human_go(self):
+        indx_in = input("Введите индексы клетки через запятую: ")
+        indx_lst = [i.strip() for i in indx_in.split(",")]
+        if len(indx_lst) == 2 and all((i.isdigit() for i in indx_lst)):
+            row, col = (int(i) for i in indx_lst)
+        else:
+            print("Некоректно введены индексы. Индексов должно быть 2, их значение должно быть от 0 до 2.")
+            self.human_go()
+
+        self[row, col] = self.HUMAN_X
+        self.show()
+
+
+
+
+game = TicTacToe()
+game.human_go()
