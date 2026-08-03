@@ -12,6 +12,7 @@ class TicTacToe:
     FREE_CELL = 0      # свободная клетка
     HUMAN_X = 1        # крестик (игрок - человек)
     COMPUTER_O = 2     # нолик (игрок - компьютер)
+    INCORRECT_INDX_HUMAN = "Некоректно введены индексы. Индексов должно быть 2, их значение должно быть от 0 до 2."
 
     def __init__(self):
         self.pole = tuple(tuple(Cell() for _ in range(3)) for _ in range(3))
@@ -69,19 +70,63 @@ class TicTacToe:
         print("----------")
 
     def human_go(self):
-        indx_in = input("Введите индексы клетки через запятую: ")
-        indx_lst = [i.strip() for i in indx_in.split(",")]
-        if len(indx_lst) == 2 and all((i.isdigit() for i in indx_lst)):
-            row, col = (int(i) for i in indx_lst)
-        else:
-            print("Некоректно введены индексы. Индексов должно быть 2, их значение должно быть от 0 до 2.")
-            self.human_go()
+        correct_input = False
+
+        while not correct_input:
+            indx_in = input("Введите индексы клетки через запятую: ")
+            indx_lst = [i.strip() for i in indx_in.split(",")]
+            if len(indx_lst) == 2 and all((i.isdigit() for i in indx_lst)):
+                row, col = (int(i) for i in indx_lst)
+                if row > 2 or col > 2:
+                    print(self.INCORRECT_INDX_HUMAN)
+                elif not self.pole[row][col]:
+                    print("Клетка занята, выберете другую")
+                else:
+                    correct_input = True
+            else:
+                print(self.INCORRECT_INDX_HUMAN)
 
         self[row, col] = self.HUMAN_X
-        self.show()
+
+    def computer_go(self):
+        free_cells = []
+
+        for row in range(3):
+            for col in range(3):
+                if self.pole[row][col]:
+                    free_cells.append([row, col])
+
+        row, col = free_cells[random.randint(0, len(free_cells) - 1)]
+
+        self[row, col] = self.COMPUTER_O
 
 
 
 
-game = TicTacToe()
-game.human_go()
+# game = TicTacToe()
+# game.init()
+# step_game = 0
+# while game:
+#     game.show()
+
+#     if step_game % 2 == 0:
+#         game.human_go()
+#     else:
+#         game.computer_go()
+
+#     step_game += 1
+
+
+# game.show()
+
+# if game.is_human_win:
+#     print("Поздравляем! Вы победили!")
+# elif game.is_computer_win:
+#     print("Все получится, со временем")
+# else:
+#     print("Ничья.")
+
+# res = random.choice([[0, 1], [1, 2]])
+# row, col = res
+# print(row)
+# print(col)
