@@ -96,37 +96,32 @@ class TicTacToe:
                 if self.pole[row][col]:
                     free_cells.append([row, col])
 
-        row, col = free_cells[random.randint(0, len(free_cells) - 1)]
-
+        row, col = random.choice(free_cells)
         self[row, col] = self.COMPUTER_O
 
 
 
 
-# game = TicTacToe()
-# game.init()
-# step_game = 0
-# while game:
-#     game.show()
+game = TicTacToe()
+game.init()
+step_game = 0
+while game:
+    game.show()
 
-#     if step_game % 2 == 0:
-#         game.human_go()
-#     else:
-#         game.computer_go()
+    if step_game % 2 == 0:
+        game.human_go()
+    else:
+        game.computer_go()
 
-#     step_game += 1
+    step_game += 1
 
 
-# game.show()
+game.show()
 
-# if game.is_human_win:
-#     print("Поздравляем! Вы победили!")
-# elif game.is_computer_win:
-#     print("Все получится, со временем")
-# else:
-#     print("Ничья.")
+if game.is_human_win:
+    print("Поздравляем! Вы победили!")
+elif game.is_computer_win:
+    print("Все получится, со временем")
+else:
+    print("Ничья.")
 
-# res = random.choice([[0, 1], [1, 2]])
-# row, col = res
-# print(row)
-# print(col)
