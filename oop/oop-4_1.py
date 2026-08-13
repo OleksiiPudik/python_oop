@@ -85,16 +85,36 @@
 # tasc 5
 
 class Thing:
-    ID = 1
+    id = 0
 
-    def __init__(self, name, price):
+    def __init__(self, name, price, weight=None, dims=None, memory=None, frm=None):
         self.name = name
         self.price = price
-        self.id = self.ID
+        self.weight = weight
+        self.dims = dims
+        self.memory = memory
+        self.frm = frm
+        Thing.id += 1
+        self.id = Thing.id
+
+    def get_data(self):
+        return (self.id, self.name, self.price, self.weight, self.dims, self.memory, self.frm)
+
+
+class Table(Thing):
+    def __init__(self, name, price, weight, dims):
+        super().__init__(name, price, weight, dims)
+
+
+class ElBook(Thing):
+    def __init__(self, name, price, memory, frm):
+        super().__init__(name, price, memory=memory, frm=frm)
         
 
-
-th1 = Thing("aaa", 1)
-th2 = Thing("bbb", 2)
-print(th1.id)
-print(th2.id)
+table = Table("round", 1024, 812.55, (700, 750, 700))
+book = ElBook("Python OOP", 2000, 2048, "pdf")
+# print(*table.get_data())
+# print(*book.get_data())
+table2 = Table("square", 111, 222, 333)
+book2 = ElBook("some book", 444, 555, "jpg")
+print(table.id, book.id, table2.id, book2.id)
