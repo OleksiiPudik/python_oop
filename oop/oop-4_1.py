@@ -84,37 +84,72 @@
 
 # tasc 5
 
-class Thing:
-    id = 0
+# class Thing:
+#     id = 0
 
-    def __init__(self, name, price, weight=None, dims=None, memory=None, frm=None):
-        self.name = name
-        self.price = price
-        self.weight = weight
-        self.dims = dims
-        self.memory = memory
-        self.frm = frm
-        Thing.id += 1
-        self.id = Thing.id
+#     def __init__(self, name, price, weight=None, dims=None, memory=None, frm=None):
+#         self.name = name
+#         self.price = price
+#         self.weight = weight
+#         self.dims = dims
+#         self.memory = memory
+#         self.frm = frm
+#         Thing.id += 1
+#         self.id = Thing.id
 
-    def get_data(self):
-        return (self.id, self.name, self.price, self.weight, self.dims, self.memory, self.frm)
-
-
-class Table(Thing):
-    def __init__(self, name, price, weight, dims):
-        super().__init__(name, price, weight, dims)
+#     def get_data(self):
+#         return (self.id, self.name, self.price, self.weight, self.dims, self.memory, self.frm)
 
 
-class ElBook(Thing):
-    def __init__(self, name, price, memory, frm):
-        super().__init__(name, price, memory=memory, frm=frm)
+# class Table(Thing):
+#     def __init__(self, name, price, weight, dims):
+#         super().__init__(name, price, weight, dims)
+
+
+# class ElBook(Thing):
+#     def __init__(self, name, price, memory, frm):
+#         super().__init__(name, price, memory=memory, frm=frm)
         
 
-table = Table("round", 1024, 812.55, (700, 750, 700))
-book = ElBook("Python OOP", 2000, 2048, "pdf")
-# print(*table.get_data())
-# print(*book.get_data())
-table2 = Table("square", 111, 222, 333)
-book2 = ElBook("some book", 444, 555, "jpg")
-print(table.id, book.id, table2.id, book2.id)
+# table = Table("round", 1024, 812.55, (700, 750, 700))
+# book = ElBook("Python OOP", 2000, 2048, "pdf")
+# # print(*table.get_data())
+# # print(*book.get_data())
+# table2 = Table("square", 111, 222, 333)
+# book2 = ElBook("some book", 444, 555, "jpg")
+# print(table.id, book.id, table2.id, book2.id)
+
+
+# ---------------------------------------------
+# tasc 6
+
+class GenericView:
+    def __init__(self, methods=('GET',)):
+        self.methods = methods
+
+    def get(self, request):
+        return ""
+
+    def post(self, request):
+        pass
+
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass
+
+
+class DetailView(GenericView):
+    def __init__(self, methods=('GET',)):
+        super().__init__(methods)
+
+    def render_request(self, request, method):
+        if method not in self.methods:
+            raise TypeError("данный запрос не может быть выполнен")
+
+        
+
+
+a = DetailView(("PUT", "POST"))
+print(a.methods)
