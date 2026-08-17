@@ -148,8 +148,20 @@ class DetailView(GenericView):
         if method not in self.methods:
             raise TypeError("данный запрос не может быть выполнен")
 
+        method = method.lower()
+
+        return getattr(self, method)(request)
+
+    def get(self, request):
+        if type(request) is not dict:
+            raise TypeError("request не является словарем")
+        elif "url" not in request:
+            raise TypeError("request не содержит обязательного ключа url")
+        
+        return f"url: {request['url']}"
         
 
 
-a = DetailView(("PUT", "POST"))
-print(a.methods)
+dv = DetailView()
+html = dv.render_request({"url": "https://site.ua/home"}, "GET")
+print(html)
