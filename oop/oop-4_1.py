@@ -171,29 +171,46 @@
 
 # tasc 7
 
-class Singleton:
-    __isinstance = None
+# class Singleton:
+#     __isinstance = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls.__isinstance is None:
-            cls.__isinstance = super().__new__(cls)
+#     def __new__(cls, *args, **kwargs):
+#         if cls.__isinstance is None:
+#             cls.__isinstance = super().__new__(cls)
 
-        return cls.__isinstance
-
-
-class Game(Singleton):
-    def __init__(self, name):
-        super().__init__()
-        if getattr(self, "name", None) is None:
-            self.name = name
+#         return cls.__isinstance
 
 
-game1 = Game("doom")
-game2 = Game("age of empire")
-game3 = Game("tetris")
-print(game1.name)
-print(game2.name)
-print(game3.name)
-print(hash(game1))
-print(hash(game2))
-print(hash(game3))
+# class Game(Singleton):
+#     def __init__(self, name):
+#         super().__init__()
+#         if getattr(self, "name", None) is None:
+#             self.name = name
+
+
+# game1 = Game("doom")
+# game2 = Game("age of empire")
+# game3 = Game("tetris")
+# print(game1.name)
+# print(game2.name)
+# print(game3.name)
+# print(hash(game1))
+# print(hash(game2))
+# print(hash(game3))
+
+
+# ----------------------------------
+
+# tasc 8
+
+class Validator:
+    def _is_valid(self, data):
+        return True
+
+    def __call__(self, d, *args, **kwds):
+        if not self._is_valid(d):
+            raise ValueError("данные не прошли валидацию")
+        
+
+res = Validator()
+res(10)
