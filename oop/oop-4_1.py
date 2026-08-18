@@ -123,45 +123,77 @@
 # ---------------------------------------------
 # tasc 6
 
-class GenericView:
-    def __init__(self, methods=('GET',)):
-        self.methods = methods
+# class GenericView:
+#     def __init__(self, methods=('GET',)):
+#         self.methods = methods
 
-    def get(self, request):
-        return ""
+#     def get(self, request):
+#         return ""
 
-    def post(self, request):
-        pass
+#     def post(self, request):
+#         pass
 
-    def put(self, request):
-        pass
+#     def put(self, request):
+#         pass
 
-    def delete(self, request):
-        pass
+#     def delete(self, request):
+#         pass
 
 
-class DetailView(GenericView):
-    def __init__(self, methods=('GET',)):
-        super().__init__(methods)
+# class DetailView(GenericView):
+#     def __init__(self, methods=('GET',)):
+#         super().__init__(methods)
 
-    def render_request(self, request, method):
-        if method not in self.methods:
-            raise TypeError("данный запрос не может быть выполнен")
+#     def render_request(self, request, method):
+#         if method not in self.methods:
+#             raise TypeError("данный запрос не может быть выполнен")
 
-        method = method.lower()
+#         method = method.lower()
 
-        return getattr(self, method)(request)
+#         return getattr(self, method)(request)
 
-    def get(self, request):
-        if type(request) is not dict:
-            raise TypeError("request не является словарем")
-        elif "url" not in request:
-            raise TypeError("request не содержит обязательного ключа url")
+#     def get(self, request):
+#         if type(request) is not dict:
+#             raise TypeError("request не является словарем")
+#         elif "url" not in request:
+#             raise TypeError("request не содержит обязательного ключа url")
         
-        return f"url: {request['url']}"
+#         return f"url: {request['url']}"
         
 
 
-dv = DetailView()
-html = dv.render_request({"url": "https://site.ua/home"}, "GET")
-print(html)
+# dv = DetailView()
+# html = dv.render_request({"url": "https://site.ua/home"}, "GET")
+# print(html)
+
+
+# --------------------------------------------
+
+# tasc 7
+
+class Singleton:
+    __isinstance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__isinstance is None:
+            cls.__isinstance = super().__new__(cls)
+
+        return cls.__isinstance
+
+
+class Game(Singleton):
+    def __init__(self, name):
+        super().__init__()
+        if getattr(self, "name", None) is None:
+            self.name = name
+
+
+game1 = Game("doom")
+game2 = Game("age of empire")
+game3 = Game("tetris")
+print(game1.name)
+print(game2.name)
+print(game3.name)
+print(hash(game1))
+print(hash(game2))
+print(hash(game3))
