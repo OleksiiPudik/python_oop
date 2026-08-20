@@ -204,13 +204,38 @@
 # tasc 8
 
 class Validator:
+    _valid_type = None
+
+    def __init__(self, min_value = None, max_value = None):
+        self.min_value = min_value
+        self.max_value = max_value
+
     def _is_valid(self, data):
+        if self._valid_type is None:
+            return True
+        
+        if isinstance(data, bool) or not isinstance(data, self._valid_type) or not (self.min_value <= data <= self.max_value):
+            return False
+        
         return True
 
     def __call__(self, d, *args, **kwds):
         if not self._is_valid(d):
             raise ValueError("данные не прошли валидацию")
+
+        return True
+
+
+class IntegerValidator(Validator):
+    _valid_type = int
+
+
+class FloatValidator(Validator):
+    _valid_type = float
+     
         
 
-res = Validator()
-res(10)
+integer_validator = IntegerValidator(-10, 10)
+float_validator = FloatValidator(-1, 1)
+res1 = integer_validator(10)
+res2 = float_validator(True)
