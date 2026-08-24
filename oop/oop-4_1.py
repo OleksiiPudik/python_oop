@@ -203,39 +203,84 @@
 
 # tasc 8
 
-class Validator:
-    _valid_type = None
+# class Validator:
+#     _valid_type = None
 
-    def __init__(self, min_value = None, max_value = None):
-        self.min_value = min_value
-        self.max_value = max_value
+#     def __init__(self, min_value = None, max_value = None):
+#         self.min_value = min_value
+#         self.max_value = max_value
 
-    def _is_valid(self, data):
-        if self._valid_type is None:
-            return True
+#     def _is_valid(self, data):
+#         if self._valid_type is None:
+#             return True
         
-        if isinstance(data, bool) or not isinstance(data, self._valid_type) or not (self.min_value <= data <= self.max_value):
-            return False
+#         if isinstance(data, bool) or not isinstance(data, self._valid_type) or not (self.min_value <= data <= self.max_value):
+#             return False
         
-        return True
+#         return True
 
-    def __call__(self, d, *args, **kwds):
-        if not self._is_valid(d):
-            raise ValueError("данные не прошли валидацию")
+#     def __call__(self, d, *args, **kwds):
+#         if not self._is_valid(d):
+#             raise ValueError("данные не прошли валидацию")
 
-        return True
-
-
-class IntegerValidator(Validator):
-    _valid_type = int
+#         return True
 
 
-class FloatValidator(Validator):
-    _valid_type = float
+# class IntegerValidator(Validator):
+#     _valid_type = int
+
+
+# class FloatValidator(Validator):
+#     _valid_type = float
      
         
 
-integer_validator = IntegerValidator(-10, 10)
-float_validator = FloatValidator(-1, 1)
-res1 = integer_validator(10)
-res2 = float_validator(True)
+# integer_validator = IntegerValidator(-10, 10)
+# float_validator = FloatValidator(-1, 1)
+# res1 = integer_validator(10)
+# res2 = float_validator(True)
+
+
+# ------------------------------------
+
+# tasc 9
+
+class Layer:
+    name = "Layer"
+
+    def __init__(self):
+        self.next_layer = None
+
+    def __call__(self, n_l):
+        self.next_layer = n_l
+        return n_l
+
+
+class Input(Layer):
+    name = "Input"
+
+    def __init__(self, inputs):
+        super().__init__()
+        self.inputs = inputs
+
+
+class Dense(Layer):
+    name = "Dense"
+
+    def __init__(self, inputs, outputs, activation):
+        super().__init__()
+        self.inputs = inputs
+        self.outputs = outputs
+        self.activation = activation
+
+
+network = Input(23)
+layer = network(Dense(network.inputs, 111, "aaa"))
+layer = layer(Dense(layer.inputs, 222, "bbb"))
+
+l1 = network.next_layer
+l2 = l1.next_layer
+
+print(network, network.next_layer)
+print(l1, l1.next_layer)
+print(l2, l2.next_layer)
