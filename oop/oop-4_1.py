@@ -274,13 +274,32 @@ class Dense(Layer):
         self.activation = activation
 
 
+class NetworkIterator:
+    def __init__(self, nw):
+        self.nw = nw
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.nw is not None:
+            current_layer = self.nw
+            self.nw = self.nw.next_layer
+            return current_layer
+        
+        raise StopIteration
+
+
 network = Input(23)
 layer = network(Dense(network.inputs, 111, "aaa"))
 layer = layer(Dense(layer.inputs, 222, "bbb"))
 
-l1 = network.next_layer
-l2 = l1.next_layer
+# l1 = network.next_layer
+# l2 = l1.next_layer
 
-print(network, network.next_layer)
-print(l1, l1.next_layer)
-print(l2, l2.next_layer)
+# print(network, network.next_layer)
+# print(l1, l1.next_layer)
+# print(l2, l2.next_layer)
+
+for x in NetworkIterator(network):
+    print(x.name)
