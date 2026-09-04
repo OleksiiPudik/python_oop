@@ -50,6 +50,9 @@ class Thing:
         return hash((self.name, self.price, self.weight))
 
     def __eq__(self, value):
+        if not isinstance(value, Thing):
+            return False
+        
         return (self.name, self.price, self.weight) == (value.name, value.price, value.weight)
 
 
@@ -58,12 +61,8 @@ thing2 = Thing("some name", 12.34, 56.78)
 d = {}
 d[thing1] = 1
 d[thing2] = 2
-# print(d)
-# print(len(d))
-# print(hash(thing1))
-# print(hash(thing2))
-# print(thing1 == thing2)
-# print(thing1)
-# print(thing2)
-print(list(d.keys()))
+print(thing1 == 5)
+# print("abc" == 5)
+# print([1, 2] == 5)
+# print((1, 2) == 5)
 
