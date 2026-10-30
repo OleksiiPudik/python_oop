@@ -59,9 +59,10 @@ class Thing:
 thing1 = Thing("some name", 12.34, 56.78)
 thing2 = Thing("some name", 12.34, 56.78)
 d = {}
-d[thing1] = 1
-d[thing2] = 2
-print(thing1 == 5)
+# print(Thing.__hash__)
+d[thing1] = thing1
+d[thing2] = thing2
+print(len(d))
 # print("abc" == 5)
 # print([1, 2] == 5)
 # print((1, 2) == 5)
