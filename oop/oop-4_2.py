@@ -56,14 +56,26 @@ class Thing:
         return (self.name, self.price, self.weight) == (value.name, value.price, value.weight)
 
 
-thing1 = Thing("some name", 12.34, 56.78)
-thing2 = Thing("some name", 12.34, 56.78)
-d = {}
-# print(Thing.__hash__)
-d[thing1] = thing1
-d[thing2] = thing2
-print(len(d))
+# thing1 = Thing("some name", 12.34, 56.78)
+# thing2 = Thing("some name", 12.34, 56.78)
+# d = {}
+# # print(Thing.__hash__)
+# d[thing1] = thing1
+# d[thing2] = thing2
+# print(len(d))
 # print("abc" == 5)
 # print([1, 2] == 5)
 # print((1, 2) == 5)
+
+class A(dict):
+    def __init__(self, aa):
+        self.aa = aa
+
+    def __setitem__(self, key, value):
+        print("call method setitem")
+
+    # def __setattr__(self, name, value):
+    #     print("call method setattr")
+
+qqq = A({"a": 1})
 
