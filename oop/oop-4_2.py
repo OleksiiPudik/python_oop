@@ -67,16 +67,27 @@ class Thing:
 # print([1, 2] == 5)
 # print((1, 2) == 5)
 
-class A(dict):
-    def __init__(self, aa):
-        self.aa = aa
+class A:
+    pass
 
-    def __setitem__(self, key, value):
-        print("call method setitem")
 
-    def __setattr__(self, name, value):
-        print("call method setattr")
+# obj = A()
+# obj.bb = 5
+# print(obj.__dict__)
+# obj.__dict__['bb'] = 6
+# print(obj.__dict__)
+# print(obj.bb)
 
-qqq = A(2)
-qqq["aa"] = 3
+class C(dict):
+    x = 1
+    pass
 
+
+obj = C()
+# obj.dd = 7
+# obj['dd'] = 5
+# print(obj.__dict__)
+# print(obj)
+print(obj.x)
+obj['x'] = 2
+print(obj['x'])
