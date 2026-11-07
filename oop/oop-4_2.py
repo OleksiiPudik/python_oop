@@ -74,8 +74,9 @@ class A(dict):
     def __setitem__(self, key, value):
         print("call method setitem")
 
-    # def __setattr__(self, name, value):
-    #     print("call method setattr")
+    def __setattr__(self, name, value):
+        print("call method setattr")
 
-qqq = A({"a": 1})
+qqq = A(2)
+qqq["aa"] = 3
 
