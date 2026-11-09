@@ -83,11 +83,26 @@ class C(dict):
     pass
 
 
-obj = C()
+# obj = C()
 # obj.dd = 7
 # obj['dd'] = 5
 # print(obj.__dict__)
 # print(obj)
-print(obj.x)
-obj['x'] = 2
-print(obj['x'])
+# print(obj.x)
+# obj['x'] = 2
+# print(obj['x'])
+
+
+class E(dict):
+    def __setitem__(self, key, value):
+        print("call func Setitem")
+        return super().__setitem__(key, value)
+    
+
+obj_e = E({3: 3, 4: 4})
+# obj_e[1] = 1
+# obj_e[2] = 2
+print(obj_e)
+# Вывод для DictShop: проверка в __setitem__ не защищает словарь который передается при создании экземпляра. 
+# при создании экземпляра отрабатывает __init__ который обходит __setitem__. поэтому проверку нужно писать две проверки
+# одну в __init__ а другую в __setitem__.
