@@ -56,8 +56,26 @@ class Thing:
         return (self.name, self.price, self.weight) == (value.name, value.price, value.weight)
 
 
-# thing1 = Thing("some name", 12.34, 56.78)
-# thing2 = Thing("some name", 12.34, 56.78)
+class DictShop(dict):
+    def __init__(self, iterable={}):
+        if not isinstance(iterable, dict):
+            raise TypeError("аргумент должен быть словарем")
+
+        for i in iterable.keys():
+            if not isinstance(i, Thing):
+                raise TypeError("ключами могут быть только объекты класса Thing")
+        
+        super().__init__(iterable)
+        
+# a = DictShop({1: 1, 2: 2})
+
+
+    
+
+thing1 = Thing("name_1", 1, 2)
+thing2 = Thing("name_2", 3, 4)
+dict_things = DictShop({thing1: thing1, thing2: thing2})
+
 # d = {}
 # # print(Thing.__hash__)
 # d[thing1] = thing1
@@ -67,8 +85,8 @@ class Thing:
 # print([1, 2] == 5)
 # print((1, 2) == 5)
 
-class A:
-    pass
+# class A:
+#     pass
 
 
 # obj = A()
@@ -78,9 +96,9 @@ class A:
 # print(obj.__dict__)
 # print(obj.bb)
 
-class C(dict):
-    x = 1
-    pass
+# class C(dict):
+#     x = 1
+#     pass
 
 
 # obj = C()
@@ -93,16 +111,16 @@ class C(dict):
 # print(obj['x'])
 
 
-class E(dict):
-    def __setitem__(self, key, value):
-        print("call func Setitem")
-        return super().__setitem__(key, value)
+# class E(dict):
+#     def __setitem__(self, key, value):
+#         print("call func Setitem")
+#         return super().__setitem__(key, value)
     
 
-obj_e = E({3: 3, 4: 4})
+# obj_e = E({3: 3, 4: 4})
 # obj_e[1] = 1
 # obj_e[2] = 2
-print(obj_e)
+# print(obj_e)
 # Вывод для DictShop: проверка в __setitem__ не защищает словарь который передается при создании экземпляра. 
 # при создании экземпляра отрабатывает __init__ который обходит __setitem__. поэтому проверку нужно писать две проверки
 # одну в __init__ а другую в __setitem__.
