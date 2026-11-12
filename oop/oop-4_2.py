@@ -64,12 +64,6 @@ class DictShop(dict):
         for k, v in iterable.items():
             self[k] = v
 
-        # for i in iterable.keys():
-        #     if not isinstance(i, Thing):
-        #         raise TypeError("ключами могут быть только объекты класса Thing")
-        
-        # super().__init__(iterable)
-
     def __setitem__(self, key, value):
         if not isinstance(key, Thing):
             raise TypeError("ключами могут быть только объекты класса Thing")
