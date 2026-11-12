@@ -61,20 +61,41 @@ class DictShop(dict):
         if not isinstance(iterable, dict):
             raise TypeError("аргумент должен быть словарем")
 
-        for i in iterable.keys():
-            if not isinstance(i, Thing):
-                raise TypeError("ключами могут быть только объекты класса Thing")
+        for k, v in iterable.items():
+            self[k] = v
+
+        # for i in iterable.keys():
+        #     if not isinstance(i, Thing):
+        #         raise TypeError("ключами могут быть только объекты класса Thing")
         
-        super().__init__(iterable)
+        # super().__init__(iterable)
+
+    def __setitem__(self, key, value):
+        if not isinstance(key, Thing):
+            raise TypeError("ключами могут быть только объекты класса Thing")
         
-# на следующий раз нужно подумать как не дублировать проверку в __setitem__, нужно посмотреть что общего в ините и сетитеме
+        return super().__setitem__(key, value)
+        
+
+th_1 = Thing("Laptop", 111, 222.22)
+th_2 = Thing("Book", 33, 44)
+dict_things = DictShop({1: th_1})
+print(dict_things)
+# dict_things[th_1] = th_1
+# dict_things[th_2] = th_2
+
+# for x in dict_things:
+#     print(x.name)
+
+
+# dict_things[1] = th_1
 
 
     
 
-thing1 = Thing("name_1", 1, 2)
-thing2 = Thing("name_2", 3, 4)
-dict_things = DictShop({thing1: thing1, thing2: thing2})
+# thing1 = Thing("name_1", 1, 2)
+# thing2 = Thing("name_2", 3, 4)
+# dict_things = DictShop({thing1: thing1, thing2: thing2})
 
 # d = {}
 # # print(Thing.__hash__)
