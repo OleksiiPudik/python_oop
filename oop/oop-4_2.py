@@ -57,7 +57,10 @@ class Thing:
 
 
 class DictShop(dict):
-    def __init__(self, iterable={}):
+    def __init__(self, iterable=None):
+        if iterable is None:
+            iterable = {}
+            
         if not isinstance(iterable, dict):
             raise TypeError("аргумент должен быть словарем")
 
@@ -71,10 +74,17 @@ class DictShop(dict):
         return super().__setitem__(key, value)
         
 
-th_1 = Thing("Laptop", 111, 222.22)
-th_2 = Thing("Book", 33, 44)
-dict_things = DictShop({1: th_1})
-print(dict_things)
+def a(b={}):
+    b[len(b)] = 1
+    return b
+
+print(a())
+print(a())
+
+# th_1 = Thing("Laptop", 111, 222.22)
+# th_2 = Thing("Book", 33, 44)
+# dict_things = DictShop({1: th_1})
+# print(dict_things)
 # dict_things[th_1] = th_1
 # dict_things[th_2] = th_2
 
